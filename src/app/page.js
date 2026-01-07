@@ -1,65 +1,185 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { DATA } from "@/data/resume";
+import BlurFade from "@/components/magicui/blur-fade";
+import BlurFadeText from "@/components/magicui/blur-fade-text";
+import { Dock, DockIcon, DockSeparator } from "@/components/magicui/dock";
+import { ThemeToggle } from "@/components/theme-toggle";
+import ProjectCard from "@/components/project-card";
+import ResumeCard from "@/components/resume-card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { Notebook, Home } from "lucide-react";
+
+const BLUR_FADE_DELAY = 0.04;
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex flex-col min-h-[100dvh] space-y-10">
+      <section id="hero">
+        <div className="mx-auto w-full max-w-2xl space-y-8 px-6 pt-12">
+          <div className="gap-2 flex justify-between">
+            <div className="flex-col flex flex-1 space-y-1.5">
+              <BlurFadeText
+                delay={BLUR_FADE_DELAY}
+                className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+                text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
+              />
+              <BlurFade delay={BLUR_FADE_DELAY * 2}>
+                <p className="max-w-[600px] md:text-xl text-muted-foreground">
+                  {DATA.description}
+                </p>
+              </BlurFade>
+            </div>
+            <BlurFade delay={BLUR_FADE_DELAY}>
+              <div className="relative flex shrink-0 overflow-hidden rounded-full size-28 border-2 border-border bg-gradient-to-br from-indigo-500 to-purple-600 glow-hover transition-all duration-300">
+                <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-white">
+                  {DATA.initials}
+                </span>
+              </div>
+            </BlurFade>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+      
+      <section id="about">
+        <div className="mx-auto w-full max-w-2xl px-6">
+          <BlurFade delay={BLUR_FADE_DELAY * 3}>
+            <h2 className="text-xl font-bold">About</h2>
+          </BlurFade>
+          <BlurFade delay={BLUR_FADE_DELAY * 4}>
+            <p className="max-w-full text-pretty font-sans text-sm text-muted-foreground mt-2">
+              {DATA.summary}
+            </p>
+          </BlurFade>
         </div>
-      </main>
-    </div>
+      </section>
+      
+      <section id="work">
+        <div className="mx-auto w-full max-w-2xl px-6">
+          <div className="flex min-h-0 flex-col gap-y-3">
+            <BlurFade delay={BLUR_FADE_DELAY * 5}>
+              <h2 className="text-xl font-bold">Work Experience</h2>
+            </BlurFade>
+            {DATA.work.map((work, id) => (
+              <BlurFade
+                key={work.company}
+                delay={BLUR_FADE_DELAY * 6 + id * 0.05}
+              >
+                <ResumeCard
+                  altText={work.company}
+                  title={work.company}
+                  subtitle={work.title}
+                  href={work.href}
+                  badges={work.badges}
+                  period={`${work.start} - ${work.end ?? "Present"}`}
+                  description={work.description}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      <section id="skills">
+        <div className="mx-auto w-full max-w-2xl px-6">
+          <div className="flex min-h-0 flex-col gap-y-3">
+            <BlurFade delay={BLUR_FADE_DELAY * 9}>
+              <h2 className="text-xl font-bold">Skills</h2>
+            </BlurFade>
+            <div className="flex flex-wrap gap-1">
+              {DATA.skills.map((skill, id) => (
+                <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.03}>
+                  <Badge>{skill}</Badge>
+                </BlurFade>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="projects">
+        <div className="space-y-12 w-full py-12">
+          <BlurFade delay={BLUR_FADE_DELAY * 11}>
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
+                  My Projects
+                </div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Check out my latest work
+                </h2>
+                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed max-w-[600px] mx-auto">
+                  I&apos;ve worked on a variety of projects, from AI-powered apps to real-time collaboration tools.
+                </p>
+              </div>
+            </div>
+          </BlurFade>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto px-6">
+            {DATA.projects.map((project, id) => (
+              <BlurFade
+                key={project.title}
+                delay={BLUR_FADE_DELAY * 12 + id * 0.05}
+              >
+                <ProjectCard
+                  href={project.href}
+                  title={project.title}
+                  description={project.description}
+                  dates={project.dates}
+                  tags={project.technologies}
+                  links={project.links}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      <section id="contact">
+        <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
+          <BlurFade delay={BLUR_FADE_DELAY * 16}>
+            <div className="space-y-3">
+              <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
+                Contact
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                Get in Touch
+              </h2>
+              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Want to chat? Shoot me a dm on{" "}
+                <Link
+                  href={DATA.contact.social.LinkedIn.url}
+                  className="text-blue-500 hover:underline"
+                >
+                  LinkedIn
+                </Link>{" "}
+                and I&apos;ll respond when I can.
+              </p>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+      
+      {/* Dock */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto mb-6 flex h-full max-h-16 items-end justify-center">
+        <BlurFade delay={BLUR_FADE_DELAY * 18}>
+          <Dock className="pointer-events-auto">
+            <DockIcon href="/" label="Home">
+              <Home className="size-5" />
+            </DockIcon>
+            {Object.entries(DATA.contact.social).map(([name, social]) => (
+              <DockIcon key={name} href={social.url} label={name}>
+                <social.icon className="size-5" />
+              </DockIcon>
+            ))}
+            <DockSeparator />
+            <DockIcon href="/blog" label="Blog">
+              <Notebook className="size-5" />
+            </DockIcon>
+            <ThemeToggle />
+          </Dock>
+        </BlurFade>
+      </div>
+    </main>
   );
 }

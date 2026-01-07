@@ -2,7 +2,7 @@
 
 import { DATA } from "@/data/resume";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Dock, DockIcon, DockSeparator } from "@/components/magicui/dock";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -11,7 +11,26 @@ import { ArrowLeft, Home, Notebook, LayoutGrid, List } from "lucide-react";
 const BLUR_FADE_DELAY = 0.04;
 
 export default function BlogPageClient({ posts }) {
-  const [viewMode, setViewMode] = useState("card"); // "card" or "list"
+  const [viewMode, setViewMode] = useState("card");
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsLight(document.documentElement.classList.contains("light"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const cardBg = isLight ? "bg-white/50 hover:bg-gray-100/50" : "bg-zinc-900/50 hover:bg-zinc-800/50";
+  const cardBorder = isLight ? "border-gray-200 hover:border-gray-300" : "border-zinc-700 hover:border-zinc-500";
+  const toggleBg = isLight ? "bg-gray-200" : "bg-zinc-800";
+  const toggleBorder = isLight ? "border-gray-300" : "border-zinc-700";
+  const toggleActive = isLight ? "bg-white text-gray-900" : "bg-zinc-700 text-white";
+  const toggleInactive = isLight ? "text-gray-500 hover:text-gray-900" : "text-zinc-400 hover:text-white";
+  const tagBg = isLight ? "bg-gray-200 text-gray-700" : "bg-zinc-800 text-zinc-400";
 
   return (
     <main className="flex flex-col min-h-[100dvh]">
@@ -36,21 +55,17 @@ export default function BlogPageClient({ posts }) {
             </div>
             
             {/* View Toggle */}
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-zinc-800 border border-zinc-700">
+            <div className={`flex items-center gap-1 p-1 rounded-lg border ${toggleBg} ${toggleBorder}`}>
               <button
                 onClick={() => setViewMode("card")}
-                className={`p-2 rounded-md transition-colors ${
-                  viewMode === "card" ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
-                }`}
+                className={`p-2 rounded-md transition-colors ${viewMode === "card" ? toggleActive : toggleInactive}`}
                 title="Card View"
               >
                 <LayoutGrid className="size-4" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2 rounded-md transition-colors ${
-                  viewMode === "list" ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
-                }`}
+                className={`p-2 rounded-md transition-colors ${viewMode === "list" ? toggleActive : toggleInactive}`}
                 title="List View"
               >
                 <List className="size-4" />
@@ -73,7 +88,7 @@ export default function BlogPageClient({ posts }) {
                 {viewMode === "card" ? (
                   // Card View
                   <Link href={`/blog/${post.slug}`} className="block group">
-                    <article className="overflow-hidden rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-800/50">
+                    <article className={`overflow-hidden rounded-lg border transition-all duration-300 ${cardBg} ${cardBorder}`}>
                       {post.image && (
                         <div className="aspect-video overflow-hidden">
                           <img 
@@ -102,7 +117,7 @@ export default function BlogPageClient({ posts }) {
                         {post.tags && post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-3">
                             {post.tags.slice(0, 3).map((tag) => (
-                              <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">
+                              <span key={tag} className={`text-xs px-2 py-0.5 rounded-full ${tagBg}`}>
                                 {tag}
                               </span>
                             ))}
@@ -112,9 +127,9 @@ export default function BlogPageClient({ posts }) {
                     </article>
                   </Link>
                 ) : (
-                  // List View - Image on left, content on right
+                  // List View
                   <Link href={`/blog/${post.slug}`} className="block group">
-                    <article className="flex gap-4 p-3 rounded-lg border border-zinc-700 hover:border-zinc-500 transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-800/50">
+                    <article className={`flex gap-4 p-3 rounded-lg border transition-all duration-300 ${cardBg} ${cardBorder}`}>
                       {post.image && (
                         <div className="flex-shrink-0 w-32 h-24 sm:w-40 sm:h-28 overflow-hidden rounded-md">
                           <img 
@@ -143,7 +158,7 @@ export default function BlogPageClient({ posts }) {
                         {post.tags && post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
                             {post.tags.slice(0, 2).map((tag) => (
-                              <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">
+                              <span key={tag} className={`text-xs px-2 py-0.5 rounded-full ${tagBg}`}>
                                 {tag}
                               </span>
                             ))}

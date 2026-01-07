@@ -2,6 +2,7 @@
 
 import { DATA } from "@/data/resume";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Calendar, Home, Notebook } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
@@ -11,6 +12,25 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const BLUR_FADE_DELAY = 0.04;
 
 export default function BlogPostClient({ post }) {
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsLight(document.documentElement.classList.contains("light"));
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const codeBg = isLight ? "bg-gray-100" : "bg-zinc-800";
+  const codeBorder = isLight ? "border-gray-200" : "border-zinc-700";
+  const codeText = isLight ? "text-gray-800" : "text-zinc-200";
+  const tagBg = isLight ? "bg-gray-200 text-gray-700" : "bg-zinc-800 text-zinc-300";
+  const borderColor = isLight ? "border-gray-200" : "border-zinc-700";
+  const imageBorder = isLight ? "border-gray-200" : "border-zinc-700";
+
   return (
     <main className="flex flex-col min-h-[100dvh]">
       <article className="mx-auto w-full max-w-2xl px-6 py-12 pb-24">
@@ -28,7 +48,7 @@ export default function BlogPostClient({ post }) {
         {/* Cover Image */}
         {post.image && (
           <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
-            <div className="aspect-video overflow-hidden rounded-lg border border-zinc-700 mb-8">
+            <div className={`aspect-video overflow-hidden rounded-lg border ${imageBorder} mb-8`}>
               <img 
                 src={post.image} 
                 alt={post.title}
@@ -65,7 +85,7 @@ export default function BlogPostClient({ post }) {
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
-                  <span key={tag} className="text-xs px-3 py-1 rounded-full bg-zinc-800 text-zinc-300">
+                  <span key={tag} className={`text-xs px-3 py-1 rounded-full ${tagBg}`}>
                     {tag}
                   </span>
                 ))}
@@ -103,27 +123,27 @@ export default function BlogPostClient({ post }) {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 underline underline-offset-2"
+                    className="text-blue-500 hover:text-blue-400 underline underline-offset-2"
                   >
                     {children}
                   </a>
                 ),
                 code: ({ children }) => (
-                  <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-sm font-mono text-zinc-200">
+                  <code className={`${codeBg} px-1.5 py-0.5 rounded text-sm font-mono ${codeText}`}>
                     {children}
                   </code>
                 ),
                 pre: ({ children }) => (
-                  <pre className="bg-zinc-800 border border-zinc-700 p-4 rounded-lg overflow-x-auto my-4 text-sm">
+                  <pre className={`${codeBg} border ${codeBorder} p-4 rounded-lg overflow-x-auto my-4 text-sm`}>
                     {children}
                   </pre>
                 ),
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-blue-500 pl-4 my-4 text-muted-foreground italic bg-zinc-800/50 py-2 rounded-r">
+                  <blockquote className={`border-l-4 border-blue-500 pl-4 my-4 text-muted-foreground italic ${codeBg}/50 py-2 rounded-r`}>
                     {children}
                   </blockquote>
                 ),
-                hr: () => <hr className="my-8 border-zinc-700" />,
+                hr: () => <hr className={`my-8 ${borderColor}`} />,
                 strong: ({ children }) => (
                   <strong className="font-semibold text-foreground">{children}</strong>
                 ),
@@ -131,7 +151,7 @@ export default function BlogPostClient({ post }) {
                   <img 
                     src={src} 
                     alt={alt || ""} 
-                    className="rounded-lg my-6 w-full max-w-full border border-zinc-700"
+                    className={`rounded-lg my-6 w-full max-w-full border ${imageBorder}`}
                     loading="lazy"
                   />
                 ),
@@ -144,7 +164,7 @@ export default function BlogPostClient({ post }) {
 
         {/* Footer */}
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <footer className="mt-12 pt-8 border-t border-zinc-700">
+          <footer className={`mt-12 pt-8 border-t ${borderColor}`}>
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"

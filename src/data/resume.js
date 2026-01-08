@@ -50,18 +50,6 @@ export const DATA = {
       description:
         "Developed Python pipelines using music21 and matplotlib for MIDI-to-audio alignment using Dynamic Time Warping (DTW). Built data processing systems with NumPy and pandas for music analysis. Generated MusicXML and MIDI files for advanced audio processing workflows.",
     },
-    {
-      company: "Abhivriddhi",
-      href: "#",
-      badges: ["Leadership"],
-      location: "Pune",
-      title: "Operation Head",
-      logoUrl: "/abhivriddhi.svg",
-      start: "November 2023",
-      end: "Present",
-      description:
-        "Managed large-scale events with 1,000+ participants. Developed a ticketing system for streamlined access and implemented queue management, reducing wait times by 83%.",
-    },
   ],
 
   projects: [

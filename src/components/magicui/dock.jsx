@@ -26,11 +26,11 @@ const Dock = ({ children, className }) => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.3 }}
       style={{ 
-        backgroundColor: isLight ? "rgba(255, 255, 255, 0.85)" : "rgba(24, 24, 27, 0.85)" 
+        backgroundColor: isLight ? "rgba(255, 255, 255, 0.9)" : "rgba(24, 24, 27, 0.9)" 
       }}
       className={cn(
-        "flex items-center gap-2 px-4 py-3 backdrop-blur-xl border rounded-full shadow-2xl transition-colors duration-300",
-        isLight ? "border-zinc-300" : "border-zinc-700",
+        "flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 backdrop-blur-xl border rounded-full shadow-2xl transition-colors duration-300",
+        isLight ? "border-gray-200" : "border-zinc-700",
         className
       )}
     >
@@ -63,9 +63,9 @@ const DockIcon = ({ children, className, href, label }) => {
       target={href?.startsWith("http") ? "_blank" : undefined}
       rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
       className={cn(
-        "relative flex aspect-square cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:scale-110 p-3 size-12",
-        isLight ? "hover:bg-zinc-200" : "hover:bg-zinc-700",
-        isActive && !href?.startsWith("http") && (isLight ? "bg-zinc-200" : "bg-zinc-700"),
+        "relative flex aspect-square cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:scale-110 p-2 sm:p-3 size-10 sm:size-12",
+        isLight ? "hover:bg-gray-100" : "hover:bg-zinc-700",
+        isActive && !href?.startsWith("http") && (isLight ? "bg-gray-100" : "bg-zinc-700"),
         className
       )}
       onMouseEnter={() => setShowTooltip(true)}
@@ -75,10 +75,10 @@ const DockIcon = ({ children, className, href, label }) => {
       
       {/* Active indicator dot */}
       {isActive && !href?.startsWith("http") && (
-        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-500" />
+        <span className="absolute -bottom-0.5 sm:-bottom-1 left-1/2 -translate-x-1/2 w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-blue-500" />
       )}
       
-      {/* Tooltip */}
+      {/* Tooltip - hidden on mobile */}
       <AnimatePresence>
         {showTooltip && label && (
           <motion.div
@@ -87,8 +87,8 @@ const DockIcon = ({ children, className, href, label }) => {
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 0.15 }}
             className={cn(
-              "absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 text-xs font-medium rounded-md whitespace-nowrap shadow-lg border",
-              isLight ? "text-zinc-800 bg-white border-zinc-200" : "text-white bg-zinc-800 border-zinc-700"
+              "absolute -top-8 sm:-top-10 left-1/2 -translate-x-1/2 px-2 py-1 text-xs font-medium rounded-md whitespace-nowrap shadow-lg border hidden sm:block",
+              isLight ? "text-gray-800 bg-white border-gray-200" : "text-white bg-zinc-800 border-zinc-700"
             )}
           >
             {label}
@@ -114,7 +114,7 @@ const DockSeparator = () => {
   }, []);
 
   return (
-    <div className={cn("w-px h-8 mx-1", isLight ? "bg-zinc-300" : "bg-zinc-600")} />
+    <div className={cn("w-px h-6 sm:h-8 mx-0.5 sm:mx-1", isLight ? "bg-gray-200" : "bg-zinc-600")} />
   );
 };
 

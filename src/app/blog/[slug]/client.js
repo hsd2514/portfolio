@@ -185,13 +185,13 @@ export default function BlogPostClient({ post }) {
               <ReactMarkdown
                 components={{
                   h1: ({ children }) => (
-                    <h1 id={generateSlug(children)} className="text-2xl sm:text-3xl font-bold mt-12 sm:mt-16 mb-6 sm:mb-8 text-foreground scroll-mt-24 border-b border-border/50 pb-4 tracking-tight">{children}</h1>
+                    <h1 id={generateSlug(children)} className="text-2xl sm:text-3xl font-bold mt-8 sm:mt-16 mb-4 sm:mb-8 text-foreground scroll-mt-24 border-b border-border/50 pb-3 sm:pb-4 tracking-tight">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 id={generateSlug(children)} className="text-xl sm:text-2xl font-bold mt-10 sm:mt-12 mb-4 sm:mb-6 text-foreground/90 scroll-mt-24 tracking-tight">{children}</h2>
+                    <h2 id={generateSlug(children)} className="text-xl sm:text-2xl font-bold mt-8 sm:mt-12 mb-3 sm:mb-6 text-foreground/90 scroll-mt-24 tracking-tight">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 id={generateSlug(children)} className="text-lg sm:text-xl font-semibold mt-8 sm:mt-10 mb-3 sm:mb-4 text-foreground/80 scroll-mt-24 tracking-tight">{children}</h3>
+                    <h3 id={generateSlug(children)} className="text-lg sm:text-xl font-semibold mt-6 sm:mt-10 mb-2 sm:mb-4 text-foreground/80 scroll-mt-24 tracking-tight">{children}</h3>
                   ),
                   p: ({ children }) => (
                     <p className="mb-4 sm:mb-6 text-muted-foreground/90 leading-relaxed text-base sm:text-lg selection:bg-primary/20">{children}</p>
@@ -219,7 +219,7 @@ export default function BlogPostClient({ post }) {
                     
                     if (isInline) {
                       return (
-                        <code className="bg-primary/10 border border-primary/10 px-1.5 py-0.5 rounded-md text-sm font-mono text-primary/90 font-bold whitespace-nowrap">
+                        <code className="bg-primary/10 border border-primary/10 px-1.5 py-0.5 rounded-md text-[13px] sm:text-sm font-mono text-primary/90 font-bold break-words">
                           {children}
                         </code>
                       );
@@ -228,7 +228,7 @@ export default function BlogPostClient({ post }) {
                     return (
                       <div className="relative group my-8">
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-indigo-500/10 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                        <pre className="relative bg-secondary/40 border border-border/50 p-5 sm:p-7 rounded-2xl overflow-x-auto text-sm sm:text-base font-mono shadow-2xl backdrop-blur-sm">
+                        <pre className="relative bg-secondary/40 border border-border/50 p-4 sm:p-7 rounded-2xl overflow-x-auto text-[13px] sm:text-base font-mono shadow-2xl backdrop-blur-sm">
                           <div className="flex items-center gap-1.5 mb-4 border-b border-border/30 pb-3">
                             <div className="size-2.5 rounded-full bg-red-500/30" />
                             <div className="size-2.5 rounded-full bg-amber-500/30" />
@@ -243,7 +243,7 @@ export default function BlogPostClient({ post }) {
                     );
                   },
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-primary/30 pl-6 sm:pl-8 my-10 sm:my-14 text-muted-foreground/90 italic bg-primary/5 py-6 rounded-r-2xl text-lg sm:text-xl shadow-sm border-y border-r border-border/10">
+                    <blockquote className="border-l-4 border-primary/30 pl-4 sm:pl-8 my-6 sm:my-14 text-muted-foreground/90 italic bg-primary/5 py-4 sm:py-6 rounded-r-2xl text-base sm:text-xl shadow-sm border-y border-r border-border/10">
                       {children}
                     </blockquote>
                   ),
@@ -254,7 +254,7 @@ export default function BlogPostClient({ post }) {
                   img: ({ src, alt }) => {
                     const isVideo = src?.endsWith(".mp4");
                     return (
-                      <span className="block rounded-3xl my-10 sm:my-14 overflow-hidden border border-border shadow-2xl bg-white p-2 sm:p-3 group hover:border-primary/40 transition-all duration-500 hover:shadow-primary/5">
+                      <span className="block rounded-3xl my-6 sm:my-14 overflow-hidden border border-border shadow-2xl bg-white p-1 sm:p-3 group hover:border-primary/40 transition-all duration-500 hover:shadow-primary/5">
                         {isVideo ? (
                           <video 
                             src={src} 

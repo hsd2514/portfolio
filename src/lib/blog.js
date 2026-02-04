@@ -22,8 +22,8 @@ export function getAllPosts() {
       return {
         slug,
         title: data.title || slug,
-        date: data.date || new Date().toISOString(),
-        description: data.description || "",
+        date: data.publishedAt || data.date || new Date().toISOString(),
+        description: data.summary || data.description || "",
         tags: data.tags || [],
         readTime: data.readTime || null,
         image: data.image || null,
@@ -47,8 +47,8 @@ export function getPostBySlug(slug) {
   return {
     slug,
     title: data.title || slug,
-    date: data.date || new Date().toISOString(),
-    description: data.description || "",
+    date: data.publishedAt || data.date || new Date().toISOString(),
+    description: data.summary || data.description || "",
     tags: data.tags || [],
     readTime: data.readTime || null,
     image: data.image || null,

@@ -1,9 +1,5 @@
-import {
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-  EnvelopeClosedIcon,
-} from "@radix-ui/react-icons";
-import { Mail, Phone } from "lucide-react";
+import { GitHubLogoIcon, LinkedInLogoIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
+import { Mail, Phone, Notebook } from "lucide-react";
 
 export const DATA = {
   name: "Harsh Dange",
@@ -54,22 +50,26 @@ export const DATA = {
 
   projects: [
     {
-      title: "Legal AI Chat Bot",
-      href: "#",
-      dates: "2024",
+      title: "Rate Limiter",
+      href: "/blog/Rate-Limiting",
+      dates: "2026",
       active: true,
       description:
-        "AI chatbot providing ~95% accurate responses to legal queries using RAG (Retrieval-Augmented Generation) and Google's Gemini API. Reduces manual research time significantly.",
-      technologies: [
-        "Python",
-        "Gemini API",
-        "RAG",
-        "Faiss",
-        "Streamlit",
-        "Kaggle",
+        "A high-performance rate limiting system implementing various algorithms like Fixed Window, Sliding Window, and Token Bucket. Features adaptive limits based on user trust scores and endpoint costing.",
+      technologies: ["Python", "Redis", "Lua", "FastAPI"],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/hsd2514/rate-limit",
+          icon: GitHubLogoIcon,
+        },
+        {
+          type: "Blog",
+          href: "/blog/Rate-Limiting",
+          icon: Notebook,
+        },
       ],
-      links: [],
-      image: "",
+      image: "/media/blog/rate-limiting/rate-limiter.png",
     },
     {
       title: "Digital Whiteboard",
@@ -122,8 +122,25 @@ export const DATA = {
       ],
       image: "",
     },
+    {
+      title: "Legal AI Chat Bot",
+      href: "#",
+      dates: "2024",
+      active: true,
+      description:
+        "AI chatbot providing ~95% accurate responses to legal queries using RAG (Retrieval-Augmented Generation) and Google's Gemini API. Reduces manual research time significantly.",
+      technologies: [
+        "Python",
+        "Gemini API",
+        "RAG",
+        "Faiss",
+        "Streamlit",
+        "Kaggle",
+      ],
+      links: [],
+      image: "",
+    },
   ],
-
   skills: [
     "Python",
     "JavaScript",

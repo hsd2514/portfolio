@@ -75,11 +75,11 @@ export default function BlogPageClient({ posts }) {
                   <Link href={`/blog/${post.slug}`} className="block group">
                     <article className="overflow-hidden rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 bg-card">
                       {post.image && (
-                        <div className="aspect-video overflow-hidden">
+                        <div className="aspect-video overflow-hidden bg-white/5 flex items-center justify-center border-b border-border">
                           <img 
                             src={post.image} 
                             alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       )}
@@ -116,11 +116,11 @@ export default function BlogPageClient({ posts }) {
                   <Link href={`/blog/${post.slug}`} className="block group">
                     <article className="flex gap-3 sm:gap-4 p-2 sm:p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 bg-card">
                       {post.image && (
-                        <div className="flex-shrink-0 w-20 h-16 sm:w-32 sm:h-24 overflow-hidden rounded-md">
+                        <div className="flex-shrink-0 w-20 h-16 sm:w-32 sm:h-24 overflow-hidden rounded-md bg-white/5 flex items-center justify-center border border-border">
                           <img 
                             src={post.image} 
                             alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       )}
@@ -172,6 +172,9 @@ export default function BlogPageClient({ posts }) {
               </DockIcon>
             ))}
             <DockSeparator />
+            <DockIcon href="/projects" label="Projects">
+              <LayoutGrid className="size-4 sm:size-5" />
+            </DockIcon>
             <DockIcon href="/blog" label="Blog">
               <Notebook className="size-4 sm:size-5" />
             </DockIcon>

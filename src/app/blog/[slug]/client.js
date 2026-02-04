@@ -3,158 +3,358 @@
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Calendar, Home, Notebook } from "lucide-react";
+import { ArrowLeft, Calendar, Home, Notebook, ChevronRight, ChevronDown, LayoutGrid } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Dock, DockIcon, DockSeparator } from "@/components/magicui/dock";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useState } from "react";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function BlogPostClient({ post }) {
+  const [expandedSections, setExpandedSections] = useState({});
+
+  const toggleSection = (id) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const generateSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
+  };
+
+  const lines = post.content.split("\n");
+  const headings = [];
+  let currentParent = null;
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    const match = trimmed.match(/^(#{2,3})\s+(.+)/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2].trim();
+      const id = generateSlug(text);
+      
+      const heading = { level, text, id, children: [] };
+      
+      if (level === 2) {
+        headings.push(heading);
+        currentParent = heading;
+      } else if (level === 3) {
+        if (currentParent) {
+          currentParent.children.push(heading);
+        } else {
+          headings.push(heading);
+        }
+      }
+    }
+  });
+
   return (
     <main className="flex flex-col min-h-[100dvh]">
-      <article className="mx-auto w-full max-w-2xl px-4 sm:px-6 py-8 sm:py-12 pb-24">
-        {/* Back link */}
-        <BlurFade delay={BLUR_FADE_DELAY}>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 sm:mb-8"
-          >
-            <ArrowLeft className="size-4" />
-            Back to Blog
-          </Link>
-        </BlurFade>
-
-        {/* Cover Image */}
-        {post.image && (
-          <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
-            <div className="aspect-video overflow-hidden rounded-lg border border-border mb-6 sm:mb-8">
-              <img 
-                src={post.image} 
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </BlurFade>
-        )}
-
-        {/* Header */}
-        <BlurFade delay={BLUR_FADE_DELAY * 2}>
-          <header className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">
-              {post.title}
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="size-3 sm:size-4" />
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-              {post.readTime && <span>{post.readTime}</span>}
-            </div>
-
-            {post.description && (
-              <p className="text-base sm:text-lg text-muted-foreground">{post.description}</p>
-            )}
-            
-            {/* Tags */}
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="text-xs px-2 sm:px-3 py-1 rounded-full bg-secondary text-muted-foreground">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </header>
-        </BlurFade>
-
-        {/* Content */}
-        <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <div className="prose max-w-none">
-            <ReactMarkdown
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="text-xl sm:text-2xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 text-foreground">{children}</h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-lg sm:text-xl font-bold mt-5 sm:mt-6 mb-2 sm:mb-3 text-foreground">{children}</h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-base sm:text-lg font-semibold mt-3 sm:mt-4 mb-2 text-foreground">{children}</h3>
-                ),
-                p: ({ children }) => (
-                  <p className="mb-3 sm:mb-4 text-muted-foreground leading-relaxed text-sm sm:text-base">{children}</p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc pl-4 sm:pl-6 mb-3 sm:mb-4 text-muted-foreground space-y-1 text-sm sm:text-base">{children}</ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal pl-4 sm:pl-6 mb-3 sm:mb-4 text-muted-foreground space-y-1 text-sm sm:text-base">{children}</ol>
-                ),
-                li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
-                a: ({ href, children }) => (
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:text-blue-400 underline underline-offset-2"
-                  >
-                    {children}
-                  </a>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-secondary px-1 sm:px-1.5 py-0.5 rounded text-xs sm:text-sm font-mono text-foreground">
-                    {children}
-                  </code>
-                ),
-                pre: ({ children }) => (
-                  <pre className="bg-secondary border border-border p-3 sm:p-4 rounded-lg overflow-x-auto my-3 sm:my-4 text-xs sm:text-sm">
-                    {children}
-                  </pre>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-blue-500 pl-3 sm:pl-4 my-3 sm:my-4 text-muted-foreground italic bg-secondary/50 py-2 rounded-r text-sm sm:text-base">
-                    {children}
-                  </blockquote>
-                ),
-                hr: () => <hr className="my-6 sm:my-8 border-border" />,
-                strong: ({ children }) => (
-                  <strong className="font-semibold text-foreground">{children}</strong>
-                ),
-                img: ({ src, alt }) => (
-                  <img 
-                    src={src} 
-                    alt={alt || ""} 
-                    className="rounded-lg my-4 sm:my-6 w-full max-w-full border border-border"
-                    loading="lazy"
-                  />
-                ),
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
-          </div>
-        </BlurFade>
-
-        {/* Footer */}
-        <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <footer className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border">
+      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-8 sm:py-12 pb-24 flex flex-col lg:flex-row gap-10">
+        <article className="flex-1 min-w-0 max-w-2xl mx-auto lg:mx-0">
+          {/* Back link */}
+          <BlurFade delay={BLUR_FADE_DELAY}>
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-all hover:-translate-x-1 mb-6 sm:mb-8"
             >
               <ArrowLeft className="size-4" />
-              Back to all posts
+              Back to Blog
             </Link>
-          </footer>
-        </BlurFade>
-      </article>
+          </BlurFade>
+
+          {/* Cover Image */}
+          {post.image && (
+            <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
+              <div className="overflow-hidden rounded-2xl border border-border shadow-2xl mb-8 sm:mb-10 bg-white/5 flex items-center justify-center max-h-[400px]">
+                <img 
+                  src={post.image} 
+                  alt={post.title}
+                  className="w-full h-auto max-h-[400px] object-contain"
+                />
+              </div>
+            </BlurFade>
+          )}
+
+          {/* Header */}
+          <BlurFade delay={BLUR_FADE_DELAY * 2}>
+            <header className="mb-8 sm:mb-12 space-y-4 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight text-foreground">
+                {post.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
+                <span className="flex items-center gap-2">
+                  <Calendar className="size-4" />
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+                {post.readTime && (
+                  <span className="flex items-center gap-2">
+                    <Notebook className="size-4" />
+                    {post.readTime}
+                  </span>
+                )}
+              </div>
+
+              {post.description && (
+                <p className="text-lg sm:text-xl text-muted-foreground/80 leading-relaxed font-medium">{post.description}</p>
+              )}
+              
+              {/* Tags */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {post.tags.map((tag) => (
+                    <span key={tag} className="text-[10px] uppercase tracking-widest font-bold px-3 py-1 transparent-blur rounded-full bg-primary/5 text-primary/80 border border-primary/10">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </header>
+          </BlurFade>
+
+          {/* Table of Contents - Mobile Only */}
+          {headings.length > 0 && (
+            <BlurFade delay={BLUR_FADE_DELAY * 2.5} className="lg:hidden">
+              <div className="mb-10 p-5 rounded-2xl border border-border bg-secondary/10 shadow-sm backdrop-blur-sm">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-4 text-foreground/40 flex items-center gap-2 px-1">
+                  <Notebook className="size-3" />
+                  Outline
+                </h2>
+                <ul className="space-y-3">
+                  {headings.map((heading) => (
+                    <li key={heading.id} className="space-y-2">
+                      <div className="flex items-center gap-1">
+                        {heading.children.length > 0 && (
+                          <button 
+                            onClick={() => toggleSection(heading.id)}
+                            className="p-1 hover:bg-foreground/5 rounded transition-colors"
+                          >
+                            {expandedSections[heading.id] ? (
+                              <ChevronDown className="size-3 text-foreground/40" />
+                            ) : (
+                              <ChevronRight className="size-3 text-foreground/40" />
+                            )}
+                          </button>
+                        )}
+                        <a 
+                          href={`#${heading.id}`}
+                          className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors flex-1"
+                        >
+                          {heading.text}
+                        </a>
+                      </div>
+                      
+                      {heading.children.length > 0 && expandedSections[heading.id] && (
+                        <ul className="ml-6 space-y-2 border-l border-border pl-4">
+                          {heading.children.map((child) => (
+                            <li key={child.id}>
+                              <a 
+                                href={`#${child.id}`}
+                                className="text-xs text-muted-foreground hover:text-primary transition-colors block py-0.5"
+                              >
+                                {child.text}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </BlurFade>
+          )}
+
+          {/* Content */}
+          <BlurFade delay={BLUR_FADE_DELAY * 3}>
+            <div className="prose max-w-none">
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => (
+                    <h1 id={generateSlug(children)} className="text-2xl sm:text-3xl font-bold mt-12 sm:mt-16 mb-6 sm:mb-8 text-foreground scroll-mt-24 border-b border-border/50 pb-4 tracking-tight">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 id={generateSlug(children)} className="text-xl sm:text-2xl font-bold mt-10 sm:mt-12 mb-4 sm:mb-6 text-foreground/90 scroll-mt-24 tracking-tight">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 id={generateSlug(children)} className="text-lg sm:text-xl font-semibold mt-8 sm:mt-10 mb-3 sm:mb-4 text-foreground/80 scroll-mt-24 tracking-tight">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="mb-4 sm:mb-6 text-muted-foreground/90 leading-relaxed text-base sm:text-lg selection:bg-primary/20">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc pl-5 sm:pl-7 mb-6 sm:mb-8 text-muted-foreground/90 space-y-3 text-base sm:text-lg">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal pl-5 sm:pl-7 mb-6 sm:mb-8 text-muted-foreground/90 space-y-3 text-base sm:text-lg">{children}</ol>
+                  ),
+                  li: ({ children }) => <li className="pl-2">{children}</li>,
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      target={href.startsWith("#") ? undefined : "_blank"}
+                      rel={href.startsWith("#") ? undefined : "noopener noreferrer"}
+                      className="text-indigo-500 font-bold hover:text-indigo-400 underline underline-offset-4 decoration-indigo-500/30 transition-all active:scale-95 inline-block"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  code: ({ children, className }) => {
+                    const match = /language-(\w+)/.exec(className || "");
+                    const isInline = !match;
+                    
+                    if (isInline) {
+                      return (
+                        <code className="bg-primary/10 border border-primary/10 px-1.5 py-0.5 rounded-md text-sm font-mono text-primary/90 font-bold whitespace-nowrap">
+                          {children}
+                        </code>
+                      );
+                    }
+                    
+                    return (
+                      <div className="relative group my-8">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-indigo-500/10 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                        <pre className="relative bg-secondary/40 border border-border/50 p-5 sm:p-7 rounded-2xl overflow-x-auto text-sm sm:text-base font-mono shadow-2xl backdrop-blur-sm">
+                          <div className="flex items-center gap-1.5 mb-4 border-b border-border/30 pb-3">
+                            <div className="size-2.5 rounded-full bg-red-500/30" />
+                            <div className="size-2.5 rounded-full bg-amber-500/30" />
+                            <div className="size-2.5 rounded-full bg-emerald-500/30" />
+                            <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-foreground/30">
+                              {match[1]}
+                            </span>
+                          </div>
+                          <code className={className}>{children}</code>
+                        </pre>
+                      </div>
+                    );
+                  },
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-primary/30 pl-6 sm:pl-8 my-10 sm:my-14 text-muted-foreground/90 italic bg-primary/5 py-6 rounded-r-2xl text-lg sm:text-xl shadow-sm border-y border-r border-border/10">
+                      {children}
+                    </blockquote>
+                  ),
+                  hr: () => <hr className="my-14 sm:my-20 border-border/40" />,
+                  strong: ({ children }) => (
+                    <strong className="font-extrabold text-foreground">{children}</strong>
+                  ),
+                  img: ({ src, alt }) => {
+                    const isVideo = src?.endsWith(".mp4");
+                    return (
+                      <span className="block rounded-3xl my-10 sm:my-14 overflow-hidden border border-border shadow-2xl bg-white p-2 sm:p-3 group hover:border-primary/40 transition-all duration-500 hover:shadow-primary/5">
+                        {isVideo ? (
+                          <video 
+                            src={src} 
+                            controls 
+                            className="w-full h-full rounded-2xl"
+                          />
+                        ) : (
+                          <img 
+                            src={src} 
+                            alt={alt || ""} 
+                            className="w-full h-auto rounded-2xl block group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                            loading="lazy"
+                          />
+                        )}
+                      </span>
+                    );
+                  },
+                }}
+              >
+                {post.content}
+              </ReactMarkdown>
+            </div>
+          </BlurFade>
+
+          {/* Footer */}
+          <BlurFade delay={BLUR_FADE_DELAY * 4}>
+            <footer className="mt-16 sm:mt-24 pt-10 sm:pt-14 border-t border-border/50">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-primary transition-all hover:-translate-x-2 group"
+              >
+                <ArrowLeft className="size-5 transition-transform group-hover:scale-125" />
+                Back to all posts
+              </Link>
+            </footer>
+          </BlurFade>
+        </article>
+
+        {/* Sidebar Outline - Desktop Only */}
+        {headings.length > 0 && (
+          <aside className="hidden lg:block w-52 shrink-0">
+            <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4 scrollbar-hide">
+              <BlurFade delay={BLUR_FADE_DELAY * 2.5}>
+                <div className="space-y-8">
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30 flex items-center gap-2 px-1">
+                    <Notebook className="size-3" />
+                    Outline
+                  </h2>
+                  <nav>
+                    <ul className="space-y-1 ml-1">
+                      {headings.map((heading) => (
+                        <li key={heading.id} className="space-y-1">
+                          <div className="flex items-center gap-2 group/item">
+                            {heading.children.length > 0 ? (
+                              <button 
+                                onClick={() => toggleSection(heading.id)}
+                                className="p-1 hover:bg-foreground/5 rounded transition-colors"
+                              >
+                                {expandedSections[heading.id] ? (
+                                  <ChevronDown className="size-3 text-foreground/30 transition-transform group-hover/item:text-primary/50" />
+                                ) : (
+                                  <ChevronRight className="size-3 text-foreground/30 transition-transform group-hover/item:text-primary/50" />
+                                )}
+                              </button>
+                            ) : (
+                              <div className="size-5" />
+                            )}
+                            <a 
+                              href={`#${heading.id}`}
+                              className="flex-1 text-[13px] font-semibold text-muted-foreground hover:text-primary transition-all py-1.5 truncate"
+                            >
+                              {heading.text}
+                            </a>
+                          </div>
+                          
+                          {heading.children.length > 0 && expandedSections[heading.id] && (
+                            <ul className="ml-6 space-y-1 border-l border-border/50 pl-4">
+                              {heading.children.map((child) => (
+                                <li key={child.id}>
+                                  <a 
+                                    href={`#${child.id}`}
+                                    className="group flex items-center gap-3 text-[12px] text-muted-foreground/60 hover:text-primary transition-all py-1"
+                                  >
+                                    <div className="h-px w-2 bg-border/50 group-hover:w-3 group-hover:bg-primary transition-all" />
+                                    <span className="truncate">{child.text}</span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                </div>
+              </BlurFade>
+            </div>
+          </aside>
+        )}
+      </div>
 
       {/* Dock */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto mb-4 sm:mb-6 flex h-full max-h-14 sm:max-h-16 items-end justify-center px-4">
@@ -169,6 +369,9 @@ export default function BlogPostClient({ post }) {
               </DockIcon>
             ))}
             <DockSeparator />
+            <DockIcon href="/projects" label="Projects">
+              <LayoutGrid className="size-4 sm:size-5" />
+            </DockIcon>
             <DockIcon href="/blog" label="Blog">
               <Notebook className="size-4 sm:size-5" />
             </DockIcon>

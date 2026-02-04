@@ -181,7 +181,7 @@ export default function BlogPostClient({ post }) {
 
           {/* Content */}
           <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <div className="prose max-w-none">
+            <div className="prose prose-zinc dark:prose-invert max-w-none w-full break-words prose-headings:break-words prose-p:break-words prose-a:break-words overflow-x-hidden">
               <ReactMarkdown
                 components={{
                   h1: ({ children }) => (
@@ -206,9 +206,9 @@ export default function BlogPostClient({ post }) {
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      target={href.startsWith("#") ? undefined : "_blank"}
-                      rel={href.startsWith("#") ? undefined : "noopener noreferrer"}
-                      className="text-indigo-500 font-bold hover:text-indigo-400 underline underline-offset-4 decoration-indigo-500/30 transition-all active:scale-95 inline-block"
+                      target={href?.startsWith("#") ? undefined : "_blank"}
+                      rel={href?.startsWith("#") ? undefined : "noopener noreferrer"}
+                      className="text-indigo-500 font-bold hover:text-indigo-400 underline underline-offset-4 decoration-indigo-500/30 transition-all active:scale-95 inline break-all"
                     >
                       {children}
                     </a>
@@ -219,31 +219,31 @@ export default function BlogPostClient({ post }) {
                     
                     if (isInline) {
                       return (
-                        <code className="bg-primary/10 border border-primary/10 px-1.5 py-0.5 rounded-md text-[13px] sm:text-sm font-mono text-primary/90 font-bold break-words">
+                        <code className="bg-primary/10 border border-primary/10 px-1.5 py-0.5 rounded-md text-[12px] sm:text-sm font-mono text-primary/90 font-bold break-all">
                           {children}
                         </code>
                       );
                     }
                     
                     return (
-                      <div className="relative group my-8">
+                      <div className="relative group my-6 sm:my-8 w-full overflow-hidden">
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-indigo-500/10 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                        <pre className="relative bg-secondary/40 border border-border/50 p-4 sm:p-7 rounded-2xl overflow-x-auto text-[13px] sm:text-base font-mono shadow-2xl backdrop-blur-sm">
-                          <div className="flex items-center gap-1.5 mb-4 border-b border-border/30 pb-3">
-                            <div className="size-2.5 rounded-full bg-red-500/30" />
-                            <div className="size-2.5 rounded-full bg-amber-500/30" />
-                            <div className="size-2.5 rounded-full bg-emerald-500/30" />
-                            <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-foreground/30">
+                        <pre className="relative bg-secondary/40 border border-border/50 p-3 sm:p-7 rounded-xl sm:rounded-2xl overflow-x-auto text-[11px] sm:text-base font-mono shadow-2xl backdrop-blur-sm w-full">
+                          <div className="flex items-center gap-1.5 mb-3 sm:mb-4 border-b border-border/30 pb-2 sm:pb-3">
+                            <div className="size-2 sm:size-2.5 rounded-full bg-red-500/30" />
+                            <div className="size-2 sm:size-2.5 rounded-full bg-amber-500/30" />
+                            <div className="size-2 sm:size-2.5 rounded-full bg-emerald-500/30" />
+                            <span className="ml-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-foreground/30">
                               {match[1]}
                             </span>
                           </div>
-                          <code className={className}>{children}</code>
+                          <code className={`${className} block overflow-x-auto`}>{children}</code>
                         </pre>
                       </div>
                     );
                   },
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-primary/30 pl-4 sm:pl-8 my-6 sm:my-14 text-muted-foreground/90 italic bg-primary/5 py-4 sm:py-6 rounded-r-2xl text-base sm:text-xl shadow-sm border-y border-r border-border/10">
+                    <blockquote className="border-l-4 border-primary/30 pl-3 sm:pl-8 pr-3 sm:pr-6 my-4 sm:my-14 text-muted-foreground/90 italic bg-primary/5 py-3 sm:py-6 rounded-r-xl sm:rounded-r-2xl text-sm sm:text-xl shadow-sm border-y border-r border-border/10 break-words overflow-hidden">
                       {children}
                     </blockquote>
                   ),
@@ -254,18 +254,19 @@ export default function BlogPostClient({ post }) {
                   img: ({ src, alt }) => {
                     const isVideo = src?.endsWith(".mp4");
                     return (
-                      <span className="block rounded-3xl my-6 sm:my-14 overflow-hidden border border-border shadow-2xl bg-white p-1 sm:p-3 group hover:border-primary/40 transition-all duration-500 hover:shadow-primary/5">
+                      <span className="block rounded-xl sm:rounded-3xl my-4 sm:my-14 overflow-hidden border border-border shadow-2xl bg-white p-1 sm:p-3 group hover:border-primary/40 transition-all duration-500 hover:shadow-primary/5 w-full max-w-full">
                         {isVideo ? (
                           <video 
                             src={src} 
                             controls 
-                            className="w-full h-full rounded-2xl"
+                            playsInline
+                            className="w-full h-auto max-w-full rounded-lg sm:rounded-2xl"
                           />
                         ) : (
                           <img 
                             src={src} 
                             alt={alt || ""} 
-                            className="w-full h-auto rounded-2xl block group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                            className="w-full h-auto max-w-full rounded-lg sm:rounded-2xl block group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                             loading="lazy"
                           />
                         )}

@@ -42,49 +42,6 @@ export default function HomePageClient({ latestPost }) {
         </div>
       </section>
 
-      {latestPost && (
-        <section id="latest-read">
-          <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
-            <BlurFade delay={BLUR_FADE_DELAY * 2.5}>
-              <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                <div className="inline-block rounded-lg bg-indigo-500 text-white px-3 py-1 text-xs sm:text-sm font-medium">
-                  Latest Read
-                </div>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-            </BlurFade>
-            <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <Link href={`/blog/${latestPost.slug}`} className="group block">
-                <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-4 sm:p-6 hover:border-indigo-500/50 transition-all duration-500 shadow-sm hover:shadow-indigo-500/10 active:scale-[0.99]">
-                   <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
-                    {latestPost.image && (
-                      <div className="w-full sm:w-32 h-20 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 bg-secondary">
-                        <img 
-                          src={latestPost.image} 
-                          alt={latestPost.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1 space-y-2">
-                       <h3 className="text-base sm:text-lg font-bold leading-tight group-hover:text-indigo-500 transition-colors line-clamp-2">
-                        {latestPost.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
-                        {latestPost.description}
-                      </p>
-                      <div className="flex items-center gap-2 pt-1 text-[10px] sm:text-xs text-indigo-500 font-bold uppercase tracking-wider">
-                        <span>Read More</span>
-                        <span className="group-hover:translate-x-1 transition-transform">→</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </BlurFade>
-          </div>
-        </section>
-      )}
       
       <section id="about">
         <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
@@ -129,6 +86,50 @@ export default function HomePageClient({ latestPost }) {
           </div>
         </div>
       </section>
+
+      {latestPost && (
+        <section id="latest-read">
+          <div className="mx-auto w-full max-w-2xl px-4 sm:px-6">
+            <BlurFade delay={BLUR_FADE_DELAY * 7}>
+              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <div className="inline-block rounded-lg bg-indigo-500 text-white px-3 py-1 text-xs sm:text-sm font-medium">
+                  Latest Read
+                </div>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+            </BlurFade>
+            <BlurFade delay={BLUR_FADE_DELAY * 8}>
+              <Link href={`/blog/${latestPost.slug}`} className="group block">
+                <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-4 sm:p-6 hover:border-indigo-500/50 transition-all duration-500 shadow-sm hover:shadow-indigo-500/10 active:scale-[0.99]">
+                   <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
+                    {latestPost.image && (
+                      <div className="w-full sm:w-32 h-20 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 bg-secondary/50 border border-border/10">
+                        <img 
+                          src={latestPost.image} 
+                          alt={latestPost.title}
+                          className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 space-y-2">
+                       <h3 className="text-base sm:text-lg font-bold leading-tight group-hover:text-indigo-500 transition-colors line-clamp-2">
+                        {latestPost.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                        {latestPost.description}
+                      </p>
+                      <div className="flex items-center gap-2 pt-1 text-[10px] sm:text-xs text-indigo-500 font-bold uppercase tracking-wider">
+                        <span>Read More</span>
+                        <span className="group-hover:translate-x-1 transition-transform">→</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </BlurFade>
+          </div>
+        </section>
+      )}
 
       <section id="projects">
         <div className="space-y-8 sm:space-y-12 w-full py-8 sm:py-12">

@@ -206,9 +206,9 @@ export default function BlogPostClient({ post }) {
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      target={href?.startsWith("#") ? undefined : "_blank"}
-                      rel={href?.startsWith("#") ? undefined : "noopener noreferrer"}
-                      className="text-indigo-500 font-bold hover:text-indigo-400 underline underline-offset-4 decoration-indigo-500/30 transition-all active:scale-95 inline break-all"
+                      target={href.startsWith("#") ? undefined : "_blank"}
+                      rel={href.startsWith("#") ? undefined : "noopener noreferrer"}
+                      className="relative inline-block font-semibold text-foreground transition-colors hover:text-indigo-500 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-100 after:bg-indigo-500/30 after:transition-all after:duration-300 after:ease-in-out hover:after:origin-bottom-left hover:after:bg-indigo-500 break-words"
                     >
                       {children}
                     </a>

@@ -32,7 +32,7 @@ html.light {
   --color-card-foreground: #09090b;
 }
 
-html, body {
+body {
   overflow-x: hidden;
 }
 

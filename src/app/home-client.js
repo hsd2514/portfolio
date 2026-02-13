@@ -202,34 +202,36 @@ export default function HomePageClient({ latestPost }) {
                 delay={BLUR_FADE_DELAY * 7 + idx * 0.05}
                 className="col-span-1"
               >
-                <Link href={project.href || "#"} className="block h-full group">
-                  <BentoCard 
-                    className="h-full hover:border-indigo-500/30" 
+                <BentoCard 
+                    className="h-full hover:border-indigo-500/30 group relative flex flex-col" 
                     withTilt={false}
                     withGlow 
                     glowColor={["indigo", "purple", "blue", "pink"][idx % 4]}
                   >
-                    <div className="flex flex-col h-full">
-                      {project.image && (
-                        <div className="w-full h-20 sm:h-24 rounded-xl overflow-hidden bg-secondary/30 mb-3 -mt-1 flex items-center justify-center border border-border/30">
-                          <img 
-                            src={project.image} 
-                            alt={project.title}
-                            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
-                          />
+                    <div className="flex flex-col h-full w-full">
+                      <Link href={project.href || "#"} className="flex flex-col flex-1">
+                        {project.image && (
+                          <div className="w-full h-20 sm:h-24 rounded-xl overflow-hidden bg-secondary/30 mb-3 -mt-1 flex items-center justify-center border border-border/30">
+                            <img 
+                              src={project.image} 
+                              alt={project.title}
+                              className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="text-sm font-bold group-hover:text-indigo-500 transition-colors line-clamp-1">
+                              {project.title}
+                            </h3>
+                            <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-indigo-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+                          </div>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2">
+                            {project.description}
+                          </p>
                         </div>
-                      )}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <h3 className="text-sm font-bold group-hover:text-indigo-500 transition-colors line-clamp-1">
-                            {project.title}
-                          </h3>
-                          <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-indigo-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
-                        </div>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2">
-                          {project.description}
-                        </p>
-                      </div>
+                      </Link>
+
                       {project.technologies && (
                         <div className="flex flex-wrap gap-1 mt-3">
                           {project.technologies.slice(0, 3).map((tech) => (
@@ -242,9 +244,26 @@ export default function HomePageClient({ latestPost }) {
                           ))}
                         </div>
                       )}
+
+                      {/* Project Links */}
+                      {project.links && project.links.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-dashed border-border/40">
+                          {project.links.map((link, i) => (
+                            <Link 
+                              key={i} 
+                              href={link.href}
+                              target="_blank"
+                              className="flex items-center gap-1 text-[10px] sm:text-xs font-medium bg-secondary/50 hover:bg-indigo-500/10 hover:text-indigo-500 px-2 py-1 rounded-md transition-colors border border-border/30"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {link.icon && <link.icon className="size-3" />}
+                              {link.type}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </BentoCard>
-                </Link>
               </BlurFade>
             ))}
 

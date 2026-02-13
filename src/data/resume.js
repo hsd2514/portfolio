@@ -50,6 +50,28 @@ export const DATA = {
 
   projects: [
     {
+      title: "PulseStream",
+      href: "/projects/PulseStream",
+      dates: "2026",
+      active: true,
+      description:
+        "A high-performance, real-time personalized content feed engine. Reimagines the social media feed by combining global popularity trends with individual user preferences.",
+      technologies: ["Python", "FastAPI", "Redis", "React"],
+      links: [
+        {
+          type: "Live",
+          href: "https://pulsestream.hd2514p.site/",
+          icon: Notebook,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/hsd2514/feedstream",
+          icon: GitHubLogoIcon,
+        },
+      ],
+      image: "/media/projects/feedstream/architecture.png",
+    },
+    {
       title: "Rate Limiter",
       href: "/blog/Rate-Limiting",
       dates: "2026",
